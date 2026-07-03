@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supreme Court Judge: Mega-Chaos Arcade Edition</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #0c0805;
+            color: #f5f1ed;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .courtroom-container {
+            width: 100%;
+            max-width: 1100px;
+            background-color: #1e130b;
+            border: 4px solid #d4af37;
+            border-radius: 4px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.9);
+            position: relative;
+        }
+        
+        .bench-top {
+            text-align: center;
+            border-bottom: 3px double #8b5a2b;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .bench-top h1 {
+            color: #d4af37;
+            margin: 0;
+            letter-spacing: 4px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            font-size: 26px;
+        }
+
+        .menu-btn-container {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .menu-btn {
+            background: #4a3321;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: 4px;
+            position: relative;
+        }
+        .menu-btn:hover { background-color: #5c4033; color: white; }
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: red;
+            color: white;
+            font-size: 10px;
+            border-radius: 50%;
+            padding: 2px 6px;
+        }
+
+        .stat-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            background: #090503;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border: 1px solid #8b5a2b;
+            font-size: 13px;
+            gap: 10px;
+            text-align: center;
+        }
+        .stat-val { color: #e5c158; font-weight: bold; }
+
+        .meter-container {
+            background: #2c1d11;
+            border: 1px solid #5c4033;
+            border-radius: 3px;
+            height: 14px;
+            width: 100%;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+        .meter-fill {
+            height: 100%;
+            width: 100%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .court-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #090503;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            border: 1px solid #4a3321;
+            margin-bottom: 15px;
+        }
+        #timer {
+            color: #ff4c4c;
+            font-family: monospace;
+            font-size: 18px;
+            background: #1c0e06;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .evidence-locker {
+            background-color: #140d08;
+            border: 2px dashed #a68050;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .evidence-tag {
+            background-color: #d4af37;
+            color: #1a120b;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 2px;
+        }
+
+        .event-banner {
+            display: none;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+            border: 2px solid #ffcc00;
+        }
+        #appeal-alert { background: linear-gradient(90deg, #6b21a8, #4c1d95); color: white; animation: blinker 1.2s infinite; }
+        #crisis-alert { background: linear-gradient(90deg, #991b1b, #7f1d1d); color: white; }
+        
+        #witness-widget { background: #13233c; border: 2px solid #38bdf8; display: none; padding: 15px; margin-bottom: 15px; border-radius: 4px; }
+        
+        @keyframes blinker { 50% { opacity: 0.8; transform: scale(1.01); } }
+
+        .case-box {
+            background-color: #fcf9f2;
+            color: #1c1611;
+            padding: 20px;
+            border-left: 6px solid #8b5a2b;
+            border-right: 6px solid #8b5a2b;
+            border-radius: 4px;
+            height: 260px;
+            overflow-y: auto;
+            line-height: 1.6;
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.3);
+            font-family: 'Times New Roman', serif;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+        .evidence-line {
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #d0c4b2;
+        }
+        
+        .verdict-announcement-block {
+            background-color: #fffdf5;
+            color: #2b1d11;
+            border: 3px double #8b5a2b;
+            padding: 18px;
+            margin: 15px 0;
+            border-radius: 4px;
+            box-shadow: 2px 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .punishment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #050302;
+            border-radius: 6px;
+            border: 1px solid #4a3321;
+        }
+        .punish-btn {
+            padding: 15px;
+            font-family: 'Georgia', serif;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+            color: #fff;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 110px;
+        }
+        .punish-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.7);
+            filter: brightness(1.2);
+        }
+        .punish-title { font-size: 14px; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        .punish-desc { font-weight: normal; color: #cbd5e1; font-size: 11px; line-height: 1.4; }
+
+        .p-max-jail    { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid #38bdf8; }
+        .p-hard-labor  { background: linear-gradient(135deg, #7c2d12, #431407); border: 2px solid #f97316; }
+        .p-cyber-ban   { background: linear-gradient(135deg, #581c87, #3b0764); border: 2px solid #c084fc; }
+        .p-shame-loop  { background: linear-gradient(135deg, #7f1d1d, #450a0a); border: 2px solid #f87171; }
+        .p-asset-strip { background: linear-gradient(135deg, #713f12, #422006); border: 2px solid #eab308; }
+        .p-house-lock  { background: linear-gradient(135deg, #14532d, #064e3b); border: 2px solid #34d399; }
+        .p-exile-order { background: linear-gradient(135deg, #334155, #1e293b); border: 2px solid #94a3b8; }
+        .p-community   { background: linear-gradient(135deg, #065f46, #022c22); border: 2px solid #10b981; }
+        .p-corp-nuke   { background: linear-gradient(135deg, #991b1b, #7f1d1d); border: 2px solid #ef4444; }
+        .p-weekend     { background: linear-gradient(135deg, #075985, #0c4a6e); border: 2px solid #0ea5e9; }
+        .p-drone-track { background: linear-gradient(135deg, #4c1d95, #2e1065); border: 2px solid #a855f7; }
+        .p-re-educate  { background: linear-gradient(135deg, #1e1b4b, #311042); border: 2px solid #6366f1; }
+
+        .gavel-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn-cmd {
+            flex: 1;
+            min-width: 170px;
+            background: linear-gradient(to bottom, #5c4033, #3e2a1e);
+            color: #f5f1ed;
+            border: 1px solid #d4af37;
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        .btn-cmd:hover { background: #704e3e; }
+        .btn-cmd:disabled { opacity: 0.3; cursor: not-allowed; }
+        .btn-objection-handler { background: linear-gradient(to bottom, #8c581c, #59350b); border: 1px solid #ffcc00; }
+
+        .modal-overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.96);
+            z-index: 100;
+            border-radius: 4px;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-window {
+            background-color: #22150c;
+            border: 3px solid #d4af37;
+            border-radius: 6px;
+            width: 90%;
+            max-width: 720px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            color: #ff4c4c;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 17px;
+        }
+        .menu-grid-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .menu-large-btn {
+            background-color: #4a3321;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .menu-large-btn:hover { background-color: #61432c; color: white; }
+
+        .modal-scroller {
+            height: 280px;
+            overflow-y: auto;
+            margin-top: 15px;
+            background-color: #070403;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #4a3321;
+        }
+        
+        .email-item {
+            background-color: #140d08;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            border-left: 4px solid #d4af37;
+        }
+        .email-actions { margin-top: 10px; display: flex; gap: 10px; }
+        .btn-action-small { padding: 5px 10px; font-size: 11px; background: #4a3321; color: #fff; border: 1px solid #d4af37; cursor: pointer; }
+
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+        .shop-item { background: #140d08; border: 1px solid #a68050; padding: 12px; border-radius: 4px; text-align: center; }
+
+        .zone { display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
+        button { padding: 12px 24px; font-size: 15px; font-weight: bold; cursor: pointer; border: none; border-radius: 4px; transition: 0.2; }
+        
+        .btn-guilty { background-color: #8c1c1c; color: white; border: 1px solid #ff4c4c; }
+        .btn-innocent { background-color: #1e5a22; color: white; border: 1px solid #4caf50; }
+        .btn-utility { background-color: #d4af37; color: #1a120b; font-weight: bold; }
+
+        #sentencing-panel, #cycle-zone, #home-screen {
+            display: none; background-color: #090503; padding: 25px; border-radius: 4px; margin-top: 20px; text-align: center; border: 2px solid #8b5a2b;
+        }
+
+        .guide-section {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #22150c;
+            padding-bottom: 10px;
+        }
+        .guide-title {
+            color: #e5c158;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="courtroom-container" id="courtroom">
+    
+    <div class="bench-top">
+        <h1>COURT OF SUPREME JUSTICE: CHAOS EDITION</h1>
+        <div style="font-size: 11px; color: #a68050; letter-spacing: 6px; margin-top: 5px;">★ ARCADE JUDICIAL TERMINAL ★</div>
+        <div class="menu-btn-container">
+            <button class="menu-btn" onclick="openMenuHub()">= <span class="badge" id="menu-badge" style="display:none;">0</span></button>
+        </div>
+    </div>
+
+    <div class="stat-bar">
+        <div>
+            Jury Patience: <span class="stat-val" id="text-jury">100%</span>
+            <div class="meter-container"><div id="bar-jury" class="meter-fill" style="background-color:#22c55e;"></div></div>
+        </div>
+        <div>
+            Media Clout/Fame: <span class="stat-val" id="text-fame">10%</span>
+            <div class="meter-container"><div id="bar-fame" class="meter-fill" style="background-color:#a855f7; width:10%;"></div></div>
+        </div>
+        <div>
+            Police Integrity: <span class="stat-val" id="text-integrity">100%</span>
+            <div class="meter-container"><div id="bar-integrity" class="meter-fill" style="background-color:#3b82f6;"></div></div>
+        </div>
+        <div>Bank Cash: <span class="stat-val" id="stat-cash">$2,500</span><br><span id="owned-desk" style="font-size:10px; color:#666;">Standard Desk</span></div>
+        <div>Combo: <span class="stat-val" id="stat-combo" style="color:#00ff00;">1.0x</span><br><span id="owned-sound" style="font-size:10px; color:#666;">No Audio Box</span></div>
+        <div>Day Record: <span class="stat-val" id="stat-day">1</span><br><span id="owned-robe" style="font-size:10px; color:#666;">Standard Robes</span></div>
+    </div>
+    
+    <div id="live-court-ui">
+        <div id="appeal-alert" class="event-banner">
+            🚨 APPELLATE CHALLENGE INCOMING! A HIGHER JUDGE CHALLENGES YOUR RULING!<br>
+            <span style="font-size:13px; font-weight:normal;">Select the correct matching statute to suppress the challenge before time expires:</span>
+            <div id="appeal-choices-box" style="margin-top:10px; display:flex; justify-content:center; gap:10px;"></div>
+        </div>
+
+        <div id="crisis-alert" class="event-banner">
+            🔥 HUNG JURY CRISIS! The Jury has lost all remaining patience with the Bench!<br>
+            <button class="btn-utility" style="font-size:12px; margin-top:8px; padding:6px 12px;" onclick="resolveHungJury('bribe')">Pay Secret Media Bribe (-$800)</button>
+            <button class="btn-guilty" style="font-size:12px; margin-top:8px; padding:6px 12px;" onclick="resolveHungJury('threat')">Coerce the Jurors (-20% Integrity)</button>
+        </div>
+
+        <div id="witness-widget">
+            <span style="background:#38bdf8; color:#000; font-size:11px; font-weight:bold; padding:3px 6px; border-radius:2px;">TRAIT INTERACTION ACTIVE</span>
+            <span id="witness-status-text" style="margin-left:10px; font-size:13px; font-weight:bold; color:#e2e8f0;"></span>
+            <div id="witness-action-area" style="margin-top:8px;"></div>
+        </div>
+
+        <div class="court-header">
+            <div id="case-title">Scheduling Docket...</div>
+            <div id="timer">Time Remaining: 02:00</div>
+        </div>
+
+        <div class="evidence-locker">
+            <div>
+                <span class="evidence-tag">Current Evidence Object</span>
+                <span id="evidence-item-text" style="margin-left:10px; font-style:italic;">Loading...</span>
+            </div>
+            <button class="btn-utility" style="padding: 6px 14px; font-size:12px;" onclick="openEvidenceInspector()">🔍 Sniffer Lab Scan (PAUSE)</button>
+        </div>
+
+        <div class="gavel-actions">
+            <button class="btn-cmd" id="btn-order" onclick="orderInCourt()">🔨 "ORDER IN THE COURT!"</button>
+            <button class="btn-cmd" id="btn-proceed" onclick="proceedEvidence()">📜 "PROCEED WITH EVIDENCE"</button>
+            <button class="btn-cmd btn-objection-handler" id="btn-sustain" onclick="handleObjectionResponse(true)" disabled>⚖️ "SUSTAINED!"</button>
+            <button class="btn-cmd btn-objection-handler" id="btn-overrule" onclick="handleObjectionResponse(false)" disabled>🔊 "OVERRULED!"</button>
+        </div>
+
+        <div class="case-box" id="case-text"></div>
+
+        <div class="zone" id="verdict-buttons">
+            <button class="btn-innocent" onclick="decideGuilt(false)">NOT GUILTY</button>
+            <button class="btn-guilty" onclick="decideGuilt(true)">GUILTY</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="main-menu-modal">
+        <div class="modal-window">
+            <span class="modal-close-btn" onclick="closeMenuHub()">[X Close & Resume]</span>
+            <h2 style="color: #d4af37; text-align: center; margin: 0;">Judicial Desk Terminal</h2>
+            <div class="menu-grid-buttons">
+                <button class="menu-large-btn" onclick="switchModal('main-menu-modal', 'emails-modal')">📬 Secure Inbox Log</button>
+                <button class="menu-large-btn" onclick="switchModal('main-menu-modal', 'lawbook-modal')">⚖️ Open Law Codex</button>
+                <button class="menu-large-btn" onclick="switchModal('main-menu-modal', 'howtoplay-modal')" style="border-color:#38bdf8; color:#38bdf8;">📖 How to Play Guide</button>
+                <button class="menu-large-btn" onclick="switchModal('main-menu-modal', 'shop-modal')" style="border-color:#00ff00; color:#00ff00; grid-column: span 2;">🦹 Black Market Shop</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="howtoplay-modal">
+        <div class="modal-window">
+            <span class="modal-close-btn" onclick="switchModal('howtoplay-modal', 'main-menu-modal')">[Back to Menu]</span>
+            <h2 style="color: #38bdf8; margin:0;">📖 Courtroom Manual & Regulations</h2>
+            <div class="modal-scroller" style="font-family:'Segoe UI', sans-serif; color:#e2e8f0; font-size:13px; line-height:1.5;">
+                
+                <div class="guide-section">
+                    <div class="guide-title">🏛️ What is a Statute?</div>
+                    <div>A <strong>Statute</strong> is a specific legal code or law number (e.g., <em>Statute 101</em>) that categorizes a crime. In this game, every punishment button belongs to a specific statute category. You must memorize or look up these numbers in your <strong>Law Codex</strong> to defend your sentences if a higher court challenges your ruling.</div>
+                </div>
+
+                <div class="guide-section">
+                    <div class="guide-title">⚖️ Objective</div>
+                    <div>Manage your daily docket, survive the chaotic courtroom timelines, avoid mistrials, and maximize your metrics through strategic judicial outcomes.</div>
+                </div>
+                <div class="guide-section">
+                    <div class="guide-title">📜 Evidence Flow & Objections</div>
+                    <div>Click <strong>Proceed with Evidence</strong> to unpack arguments. If counseling yells <strong>OBJECTION!</strong>, check the details and choose <em>Sustained</em> or <em>Overruled</em> to maintain combo tiers and keep the peace.</div>
+                </div>
+                <div class="guide-section">
+                    <div class="guide-title">🔍 Sniffer Scanner</div>
+                    <div>Use the <strong>Sniffer Lab Scan</strong> tool during trial proceedings. It pauses the countdown timer and unlocks structural hardware analysis and background cash profiles of the case objects.</div>
+                </div>
+                <div class="guide-section">
+                    <div class="guide-title">🕊️ Witness Interactions</div>
+                    <div>Witnesses can exhibit random traits. <strong>Nervous</strong> witnesses will stall unless calmed down or threatened with your gavel. <strong>Over-talkative</strong> witnesses block your text lines until you cut them off.</div>
+                </div>
+                <div class="guide-section">
+                    <div class="guide-title">🚨 Appellate Challenges & System Crises</div>
+                    <div>Filing complex sentences can cause higher judges to audit your decision. Match the correct legal code's <strong>Statute Number</strong> fast to win the appeal, or face critical clout penalties. If your Jury runs out of patience entirely, be ready to pay off tracking services or force order.</div>
+                </div>
+                <div class="guide-section">
+                    <div class="guide-title">👼 Guilt vs. True Innocence</div>
+                    <div>Not everyone is guilty. Carefully inspect items and arguments to determine if a defendant is being framed via identity theft or deepfakes. Clearing an innocent person rewards your <strong>Integrity Meter</strong>, while wrongful convictions penalize it heavily.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="emails-modal">
+        <div class="modal-window">
+            <span class="modal-close-btn" onclick="switchModal('emails-modal', 'main-menu-modal')">[Back to Menu]</span>
+            <h2 style="color: #d4af37; margin:0;">📬 Mail Queue</h2>
+            <div class="modal-scroller" id="email-list-container"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="lawbook-modal">
+        <div class="modal-window">
+            <span class="modal-close-btn" onclick="switchModal('lawbook-modal', 'main-menu-modal')">[Back to Menu]</span>
+            <h2 style="color: #d4af37; margin:0;">⚖️ Penal Reference Manual</h2>
+            <div class="modal-scroller" id="law-book-page-content"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="evidence-inspector-modal">
+        <div class="modal-window" style="text-align: center;">
+            <span class="modal-close-btn" onclick="closeEvidenceInspector()">[Close & Resume Time]</span>
+            <h2 style="color: #d4af37; margin-bottom:10px;">🔍 Contraband Sniffer Scanner</h2>
+            <div style="background:#050302; padding:20px; border-radius:4px; margin:20px 0; border:1px solid #8b5a2b;">
+                <h3 id="inspect-item-title" style="color:#e5c158; margin-top:0;">No Object</h3>
+                <p id="inspect-item-desc" style="font-family:'Courier New', monospace; font-size:14px; text-align:left; line-height:1.4; color:#00ff00;"></p>
+                <div id="sniffer-readout" style="color:#ffcc00; font-weight:bold; margin-top:10px; font-family:monospace; border-top:1px dashed #333; padding-top:10px;"></div>
+            </div>
+            <button class="btn-utility" onclick="closeEvidenceInspector()">Resume Court Trial</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="shop-modal">
+        <div class="modal-window">
+            <span class="modal-close-btn" onclick="switchModal('shop-modal', 'main-menu-modal')">[Back to Menu]</span>
+            <h2 style="color: #00ff00; margin:0;">🦹 Black Market Asset Acquisitions</h2>
+            <div class="shop-grid">
+                <div class="shop-item">
+                    <h3 style="color:#e5c158; margin:0 0 5px 0;">🎙️ AI Audio Filter Box</h3>
+                    <p style="font-size:12px; color:#bbb; margin:5px 0;">Passively filters and automatically blocks 50% of random trial disruptions.</p>
+                    <button class="btn-utility" id="shop-sound" style="font-size:12px; padding:6px 12px;" onclick="buyShopItem('sound', 1200)">Buy for $1,200</button>
+                </div>
+                <div class="shop-item">
+                    <h3 style="color:#e5c158; margin:0 0 5px 0;">🧥 Silk Velvet Robes</h3>
+                    <p style="font-size:12px; color:#bbb; margin:5px 0;">Look majestic. Grants an extra +40 seconds on your active trial clock dockets.</p>
+                    <button class="btn-utility" id="shop-robe" style="font-size:12px; padding:6px 12px;" onclick="buyShopItem('robe', 1500)">Buy for $1,500</button>
+                </div>
+                <div class="shop-item">
+                    <h3 style="color:#e5c158; margin:0 0 5px 0;">🗄️ Hidden Compartment Desk</h3>
+                    <p style="font-size:12px; color:#bbb; margin:5px 0;">Reduces the Police Integrity hit by half when pocketing dirty bribe cash.</p>
+                    <button class="btn-utility" id="shop-desk" style="font-size:12px; padding:6px 12px;" onclick="buyShopItem('desk', 2000)">Buy for $2,000</button>
+                </div>
+                <div class="shop-item">
+                    <h3 style="color:#e5c158; margin:0 0 5px 0;">📜 Media Image Scrub</h3>
+                    <p style="font-size:12px; color:#bbb; margin:5px 0;">Instantly cleans and increases your structural Police Integrity metrics (+30%). Can buy repeatedly.</p>
+                    <button class="btn-utility" style="font-size:12px; padding:6px 12px; background-color:#1e5a22; color:#fff;" onclick="buyShopItem('cleanse', 750)">Acquire for $750</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sentencing-panel">
+        <h3 style="color:#d4af37; margin-top:0;">💥 CLICK DESIRED RULING BUTTON TO EXECUTE JUSTICE:</h3>
+        <div class="punishment-grid" id="punishment-buttons-box"></div>
+    </div>
+
+    <div id="cycle-zone">
+        <h3>Day's Docket Completed Successfully</h3>
+        <button class="btn-utility" onclick="goToHouse()">🏡 Travel Home for the Night</button>
+    </div>
+
+    <div id="home-screen">
+        <h3>🏡 Judge's Private Residence</h3>
+        <p>Resting up for next session...</p>
+        <button class="btn-utility" onclick="startNextDay()">☕ Wake Up & Open Next Docket</button>
+    </div>
+</div>
+
+<script>
+    const masterPunishmentsList = [
+        { class: "p-max-jail", icon: "⛓️", title: "Max Security Lockdown", statute: "101", desc: "Maximum Security Incarceration for 10 Years inside deep underground stone blocks under Statute 101." },
+        { class: "p-hard-labor", icon: "⛏️", title: "Hard Labor Camp", statute: "204", desc: "Hard Labor Detainment Camp Assignment for 14 Months straight breaking high-altitude rocks under Statute 204." },
+        { class: "p-cyber-ban", icon: "🌐", title: "Total Network Severance", statute: "309", desc: "Permanent Digital Network Ban and Complete Electronic Hardware Severance tracking under Statute 309." },
+        { class: "p-shame-loop", icon: "🤡", title: "Public Humiliation Loop", statute: "415", desc: "Forced Public Shame Parade and Apology Transcript Loops broadcast 24/7 in town square under Statute 415." },
+        { class: "p-asset-strip", icon: "💰", title: "Complete Asset Strip", statute: "101", desc: "Total Corporate Registry Revocation and Asset Liquidation Penalties filed under Statute 101." },
+        { class: "p-house-lock", icon: "🏠", title: "Strict House Arrest", statute: "309", desc: "Strict House Arrest Isolation Monitoring for exactly 250 Calendar Days via ankle array under Statute 309." },
+        { class: "p-exile-order", icon: "🧳", title: "Regional Exile Order", statute: "204", desc: "Permanent Local Exile Orders banishing the individual beyond city borders under Statute 204." },
+        { class: "p-community", icon: "🧹", title: "Sanitation Service", statute: "415", desc: "Mandatory Community Sanitation Service for 88 Consecutive Weekends cleaning sewage drains under Statute 415." },
+        { class: "p-corp-nuke", icon: "🛑", title: "Corporate Eradication", statute: "101", desc: "Immediate Corporate Dissolution and complete seizure of commercial facilities under Statute 101." },
+        { class: "p-weekend", icon: "📅", title: "Weekend Detention Lockup", statute: "204", desc: "Temporary Facility Hold for 52 Consecutive Weekends inside disciplinary processing boxes under Statute 204." },
+        { class: "p-drone-track", icon: "🛸", title: "Drone Target Tracking", statute: "309", desc: "Mandatory State Rehabilitation under constant live high-frequency drone tracking under Statute 309." },
+        { class: "p-re-educate", icon: "🧠", title: "State Re-Education", statute: "415", desc: "Mandatory State Behavioral Correction Training courses for 6 months inside regional camps under Statute 415." }
+    ];
+
+    const lawBookEntries = [
+        { title: "Statute 101: Infrastructure Control Matrix", desc: "Covers high-level structural hacking, corporate enterprise networks, and public safety routing assets." },
+        { title: "Statute 204: Commercial Import & Freight Codes", desc: "Dictates laws regarding weight logistics, maritime shipments, and heavy contraband bulk smuggling lines." },
+        { title: "Statute 309: Cyber Trace Enforcement", desc: "Governs personal localized digital activity profiles, hardware identification records, and virtual tracking anchors." },
+        { title: "Statute 415: Public Order & Civil Disruption", desc: "Establishes compliance regarding local street decorum, behavioral transparency, and courtroom interference handles." }
+    ];
+
+    const informationalEmailPool = [
+        { from: "High Council Legal Brief", body: "ATTENTION: Due to recent server overflows, Statute 309 (Cyber Trace Enforcement) now carries higher mandatory fines. Watch your sentencing metrics.", isBribe: false, handled: true },
+        { from: "Metropolitan District Feed", body: "LOCAL REPORT: Rogue botanist groups are reportedly spreading glowing flora around downtown parks. Public visibility is up 40%.", isBribe: false, handled: true },
+        { from: "Judicial Integrity Oversight", body: "REMINDER: Your Police Integrity score reflects the court's core alignment. Wrongfully finding framed individuals guilty will result in structural tracking drops.", isBribe: false, handled: true },
+        { from: "City Transit Commission", body: "NETWORK ALERT: Transit grid operations are currently running on manual fallback layers following an anonymous purple signal hack sequence.", isBribe: false, handled: true },
+        { from: "Bar Association Journal", body: "TRIAL TIP: Strained juries are far more likely to push for snap mistrials. Keep order when the noise spikes or risk complete dismissal.", isBribe: false, handled: true }
+    ];
+
+    const suspects = ["Rogue Coder", "Tech Billionaire", "Angry Chef", "Cyber Prankster", "Syndicate Agent", "Corrupt Botanist", "Janitor Joe", "Accountant Dave"];
+    
+    const casesData = [
+        {
+            crime: "hacking the transit matrix grid to switch street lights to flashing purple",
+            item: "Encrypted Solid-State Drive (SSD-99)",
+            inspect: "SYSTEM DIAGNOSTICS: Matches Defendant's Mac Address.",
+            sniffer: "SNIFFER LOG: Family wealth index: HIGH.",
+            innocent: false,
+            steps: [
+                { speaker: "Prosecution", text: "Server records capture the suspect's personalized decryption key at 2:00 AM." },
+                { speaker: "Defense", text: "Objection! My client left their router connection completely open!" },
+                { speaker: "Prosecution", text: "Network ping routes traced data packages directly back to the suspect's home router." }
+            ],
+            bribe: { from: "Tech Syndicate", text: "Look past this drive. We left $1,500 cash in your desk drawer.", cash: 1500 }
+        },
+        {
+            crime: "stealing a 500-pound shipment of artisanal gourmet cheese from the seaport terminal",
+            item: "Industrial Cargo Saw & Crowbar set (CRT-12)",
+            inspect: "FORENSIC TOOL ASSESSMENT: Edge scrapes match broken warehouse locks.",
+            sniffer: "SNIFFER LOG: Dairy residue found on metal edges.",
+            innocent: false,
+            steps: [
+                { speaker: "Prosecution", text: "Security footage records the suspect renting an industrial cutting saw hours prior." },
+                { speaker: "Defense", text: "My client rented that tooling array strictly to construct a backyard patio frame." },
+                { speaker: "Prosecution", text: "Traces of delivery container shipping grease were found smeared on the suspect's truck." }
+            ],
+            bribe: { from: "Wealthy Aunt", text: "My nephew just loves fine cheese. Drop the case for this $1,000 cash delivery.", cash: 1000 }
+        },
+        {
+            crime: "broadcasting illicit synthetic audio loops to trigger emergency security shutters across downtown banks",
+            item: "Old Disconnected Walkie-Talkie Set",
+            inspect: "HARDWARE ANALYSIS: Interior components are completely rusted out and non-functional since 2021.",
+            sniffer: "SNIFFER LOG: Signal frequency index: NULL. Device cannot transmit data strings.",
+            innocent: true,
+            steps: [
+                { speaker: "Prosecution", text: "An anonymous text tip claimed this individual was holding the master transmission asset." },
+                { speaker: "Defense", text: "The prosecution's entire voice confirmation file was generated using a public AI sound clone tool!" },
+                { speaker: "Prosecution", text: "Wait... a system review confirms the master broadcast source originated from a data center in another country." }
+            ],
+            bribe: { from: "Anonymous Framer", text: "Just slam them anyway. We need a fall guy. Here's $1,100 to ignore the system logs.", cash: 1100 }
+        },
+        {
+            crime: "breaching the city water treatment node to change the chemical baseline parameters",
+            item: "Stolen Security Keycard Badge",
+            inspect: "FIRMWARE SCAN: Logged employee access profile shows the badge was reported lost or stolen three days before the breach.",
+            sniffer: "SNIFFER LOG: Fingerprint residues on the card do NOT match the defendant.",
+            innocent: true,
+            steps: [
+                { speaker: "Prosecution", text: "The defendant's personal access credentials were used to bypass the structural safety terminal." },
+                { speaker: "Defense", text: "My client's digital wallet was entirely compromised. They were on an unnetworked train when this happened!" },
+                { speaker: "Prosecution", text: "Forensic logs indicate a remote rootkit exploit was deployed onto the card, bypassing localized biometrics entirely." }
+            ],
+            bribe: { from: "Real Hack Group", text: "Keep things simple and blame the cardholder. Take this $1,300 packet to close your eyes.", cash: 1300 }
+        },
+        {
+            crime: "operating an unauthorized automated logistics drone squad inside structural city airspace",
+            item: "Standard Electronic Toy R/C Helicopter",
+            inspect: "HARDWARE INSPECTION: Operates on toy infrared bands with a strict 15-foot physical flight ceiling.",
+            sniffer: "SNIFFER LOG: Airspace tracking software exhibits a critical calibration data loop error.",
+            innocent: true,
+            steps: [
+                { speaker: "Prosecution", text: "Automated municipal tracking monitors flagged the suspect's backyard coordinates as an active drone hub." },
+                { speaker: "Defense", text: "The municipal scanner mistaken a passing swarm of regional migratory birds for an industrial drone wing!" },
+                { speaker: "Prosecution", text: "A secondary technical audit confirms the camera system lenses were completely obscured by spiderwebs during the alert." }
+            ],
+            bribe: { from: "Corporate Sensor Vendor", text: "If you admit our sensors glitched, our stock drops. Find them guilty for $1,600.", cash: 1600 }
+        }
+    ];
+
+    let stats = { cash: 2500, integrity: 100, day: 1, cases: 0, combo: 1.0, jury: 100, fame: 10 };
+    let timeLeft = 120;
+    let timerInterval = null;
+    let isTimerRunning = false;
+    let currentEvidenceStep = 0;
+    let activeCaseData = {};
+    let isObjectionActive = false;
+    let emails = [];
+    let unreadCount = 0;
+    
+    let upgrades = { sound: false, robe: false, desk: false };
+
+    let witnessState = { type: "none", sweat: 50, wordsBlocked: false };
+    let activeAppealStatute = "";
+    let appealTimer = null;
+
+    const liveCourtUI = document.getElementById('live-court-ui');
+    const caseTitleEl = document.getElementById('case-title');
+    const caseTextEl = document.getElementById('case-text');
+    const btnOrder = document.getElementById('btn-order');
+    const btnProceed = document.getElementById('btn-proceed');
+    const btnSustain = document.getElementById('btn-sustain');
+    const btnOverrule = document.getElementById('btn-overrule');
+    const punishmentGridBox = document.getElementById('punishment-buttons-box');
+
+    generateNewRandomCase();
+    renderStaticLawBook();
+    startEmailGeneratorBackgroundLoop();
+
+    function updateStatsDisplay() {
+        document.getElementById('stat-cash').innerText = `$${stats.cash}`;
+        document.getElementById('stat-combo').innerText = `${stats.combo.toFixed(1)}x`;
+        document.getElementById('stat-day').innerText = stats.day;
+        
+        document.getElementById('text-jury').innerText = `${stats.jury}%`;
+        document.getElementById('text-fame').innerText = `${stats.fame}%`;
+        document.getElementById('text-integrity').innerText = `${stats.integrity}%`;
+
+        document.getElementById('bar-jury').style.width = `${stats.jury}%`;
+        document.getElementById('bar-jury').style.backgroundColor = stats.jury < 40 ? "#ef4444" : "#22c55e";
+        
+        document.getElementById('bar-fame').style.width = `${stats.fame}%`;
+        document.getElementById('bar-integrity').style.width = `${stats.integrity}%`;
+
+        if(stats.jury <= 0) { triggerHungJuryCrisis(); }
+    }
+
+    function renderStaticLawBook() {
+        const box = document.getElementById('law-book-page-content');
+        box.innerHTML = "";
+        lawBookEntries.forEach(l => {
+            box.innerHTML += `<div style="margin-bottom:14px; border-bottom:1px dashed #4a3321; padding-bottom:8px;"><strong style="color:#e5c158; font-size:15px;">${l.title}</strong><p style="margin:4px 0; font-size:13px; color:#ccc; font-family:'Times New Roman',serif;">${l.desc}</p></div>`;
+        });
+    }
+
+    function populateUniquePunishmentGrid() {
+        punishmentGridBox.innerHTML = "";
+        masterPunishmentsList.forEach(p => {
+            let btn = document.createElement('button');
+            btn.className = `punish-btn ${p.class}`;
+            btn.onclick = () => filterSentenceThroughAppealSystem(p);
+            btn.innerHTML = `
+                <div class="punish-title">${p.icon} ${p.title}</div>
+                <div class="punish-desc">${p.desc}</div>
+            `;
+            punishmentGridBox.appendChild(btn);
+        });
+    }
+
+    function generateNewRandomCase() {
+        let suspect = suspects[Math.floor(Math.random() * suspects.length)];
+        let profile = casesData[Math.floor(Math.random() * casesData.length)];
+        let docketNum = Math.floor(Math.random() * 8000) + 1000;
+
+        activeCaseData = {
+            title: `Docket #${docketNum}: State v. ${suspect}`,
+            intro: `<strong>[Session Open]</strong> Defendant accused of: <em>${profile.crime}</em>.`,
+            item: profile.item,
+            inspect: profile.inspect,
+            sniffer: profile.sniffer,
+            steps: profile.steps,
+            innocent: profile.innocent
+        };
+
+        document.getElementById('case-title').innerText = activeCaseData.title;
+        caseTextEl.innerHTML = `<div class="evidence-line">${activeCaseData.intro}</div>`;
+        document.getElementById('evidence-item-text').innerText = activeCaseData.item;
+
+        timeLeft = upgrades.robe ? 160 : 120; 
+        currentEvidenceStep = 0; 
+        isObjectionActive = false;
+
+        btnOrder.disabled = false; btnProceed.disabled = false;
+        btnSustain.disabled = true; btnOverrule.disabled = true;
+
+        let roll = Math.random();
+        const wWidget = document.getElementById('witness-widget');
+        const wStatus = document.getElementById('witness-status-text');
+        const wActions = document.getElementById('witness-action-area');
+        
+        if (roll < 0.35) {
+            witnessState = { type: "nervous", sweat: 50, wordsBlocked: false };
+            wWidget.style.display = "block";
+            updateNervousWitnessUI();
+        } else if (roll < 0.70) {
+            witnessState = { type: "wordy", sweat: 50, wordsBlocked: true };
+            wWidget.style.display = "block";
+            wStatus.innerText = "Witness State: OVER-TALKATIVE (Blocking evidence flow!)";
+            wActions.innerHTML = `<button class="btn-guilty" style="font-size:11px; padding:6px 12px;" onclick="cutToTheChase()">✂️ Cut to the Chase</button>`;
+        } else {
+            witnessState = { type: "none", sweat: 50, wordsBlocked: false };
+            wWidget.style.display = "none";
+        }
+
+        liveCourtUI.style.display = 'block';
+        document.getElementById('verdict-buttons').style.display = 'flex';
+        document.getElementById('sentencing-panel').style.display = 'none';
+        document.getElementById('cycle-zone').style.display = 'none';
+        document.getElementById('home-screen').style.display = 'none';
+        document.getElementById('appeal-alert').style.display = 'none';
+        document.getElementById('crisis-alert').style.display = 'none';
+
+        injectBribeMail(profile.bribe);
+        startTimer();
+        updateStatsDisplay();
+    }
+
+    function startTimer() {
+        if(isTimerRunning) return;
+        isTimerRunning = true;
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            let m = Math.floor(timeLeft / 60); let s = timeLeft % 60;
+            document.getElementById('timer').innerText = `Time Remaining: ${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+            if(timeLeft <= 0) handleMistrialTimeout();
+        }, 1000);
+    }
+
+    function stopTimer() { clearInterval(timerInterval); isTimerRunning = false; }
+    function openMenuHub() { stopTimer(); openModal('main-menu-modal'); }
+    function closeMenuHub() { closeModal('main-menu-modal'); startTimer(); }
+
+    function openEvidenceInspector() {
+        stopTimer();
+        document.getElementById('inspect-item-title').innerText = activeCaseData.item;
+        document.getElementById('inspect-item-desc').innerText = activeCaseData.inspect;
+        document.getElementById('sniffer-readout').innerText = activeCaseData.sniffer;
+        openModal('evidence-inspector-modal');
+    }
+    function closeEvidenceInspector() { closeModal('evidence-inspector-modal'); startTimer(); }
+
+    function openModal(id) {
+        if(id === 'emails-modal') { unreadCount = 0; updateBadge(); }
+        document.getElementById(id).style.display = 'flex';
+    }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function switchModal(c, o) { closeModal(c); openModal(o); }
+
+    function orderInCourt() {
+        timeLeft += 20;
+        stats.jury = Math.max(0, stats.jury - 15); 
+        caseTextEl.innerHTML += `<div class="evidence-line" style="color: #b38600; font-weight: bold;">[GAVEL] "Order!" Time extended. Jury patience strained!</div>`;
+        caseTextEl.scrollTop = caseTextEl.scrollHeight;
+        updateStatsDisplay();
+    }
+
+    function updateNervousWitnessUI() {
+        document.getElementById('witness-status-text').innerText = `Witness State: NERVOUS (Anxiety: ${witnessState.sweat}%)`;
+        document.getElementById('witness-action-area').innerHTML = `
+            <button class="btn-utility" style="font-size:11px; padding:5px 10px; margin-right:5px;" onclick="pressWitness('soft')">🕊️ Reassure Calmly</button>
+            <button class="btn-guilty" style="font-size:11px; padding:5px 10px;" onclick="pressWitness('hard')">🔨 Slam Gavel & Threaten</button>
+        `;
+    }
+
+    function pressWitness(style) {
+        if(witnessState.type !== "nervous") return;
+        if(style === 'hard') { witnessState.sweat += 20; } else { witnessState.sweat -= 15; }
+        
+        if(witnessState.sweat >= 90) {
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color:#22c55e;"><strong>[WITNESS CONFESSION]</strong> "Stop slamming! Fine, I witnessed them assemble the item layout!" (+0.5x Multiplier)</div>`;
+            stats.combo += 0.5;
+            document.getElementById('witness-widget').style.display = "none";
+            witnessState.type = "none";
+        } else if(witnessState.sweat <= 10) {
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color:#ef4444;"><strong>[WITNESS SHUTDOWN]</strong> The witness feels too protected and completely stops speaking.</div>`;
+            document.getElementById('witness-widget').style.display = "none";
+            witnessState.type = "none";
+        } else {
+            updateNervousWitnessUI();
+        }
+        caseTextEl.scrollTop = caseTextEl.scrollHeight;
+        updateStatsDisplay();
+    }
+
+    function cutToTheChase() {
+        witnessState.wordsBlocked = false;
+        caseTextEl.innerHTML += `<div class="evidence-line" style="color:#38bdf8;"><strong>[BENCH]</strong> "Irrelevant stories! Cut to the chase!" Block cleared.</div>`;
+        document.getElementById('witness-widget').style.display = "none";
+        witnessState.type = "none";
+        caseTextEl.scrollTop = caseTextEl.scrollHeight;
+    }
+
+    function proceedEvidence() {
+        if (isObjectionActive) return;
+        
+        if (witnessState.type === "wordy" && witnessState.wordsBlocked) {
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color:#94a3b8;"><strong>Witness:</strong> "As I was saying before the interruption, my cousin's roommate has this really gorgeous vintage car collection..."</div>`;
+            caseTextEl.scrollTop = caseTextEl.scrollHeight;
+            stats.jury = Math.max(0, stats.jury - 5);
+            updateStatsDisplay();
+            return;
+        }
+        if (witnessState.type === "nervous") {
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color:#e2e8f0; font-style:italic;">[WARNING] The witness is shaking on the stand. Interact with them to extract data or make them crack!</div>`;
+            caseTextEl.scrollTop = caseTextEl.scrollHeight;
+            return;
+        }
+
+        if (currentEvidenceStep < activeCaseData.steps.length) {
+            let line = activeCaseData.steps[currentEvidenceStep];
+            
+            if (currentEvidenceStep > 0 && Math.random() < 0.10) {
+                if (upgrades.sound && Math.random() < 0.50) {
+                    caseTextEl.innerHTML += `<div class="evidence-line" style="color: #10b981;">[PASSIVE AUDIO FILTER] Blocked a random defense disruption!</div>`;
+                    caseTextEl.innerHTML += `<div class="evidence-line"><strong>${line.speaker}:</strong> ${line.text}</div>`;
+                    currentEvidenceStep++;
+                } else {
+                    isObjectionActive = true;
+                    let counsel = line.speaker === "Prosecution" ? "DEFENSE" : "PROSECUTION";
+                    caseTextEl.innerHTML += `<div class="evidence-line" style="color: #d4af37; font-weight: bold;">💥 [DISRUPTION] ${counsel}: "OBJECTION!"</div>`;
+                    btnProceed.disabled = true; btnSustain.disabled = false; btnOverrule.disabled = false;
+                }
+            } else {
+                caseTextEl.innerHTML += `<div class="evidence-line"><strong>${line.speaker}:</strong> ${line.text}</div>`;
+                currentEvidenceStep++;
+            }
+        } else {
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color:#777;">All files deployed. Issue final verdict.</div>`;
+            btnProceed.disabled = true;
+        }
+        caseTextEl.scrollTop = caseTextEl.scrollHeight;
+    }
+
+    function handleObjectionResponse(sustain) {
+        isObjectionActive = false; btnSustain.disabled = true; btnOverrule.disabled = true; btnProceed.disabled = false;
+        if(sustain) {
+            stats.combo += 0.2;
+            stats.jury = Math.min(100, stats.jury + 10);
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color: #4caf50; font-weight: bold;">⚖️ [BENCH] "Sustained!" Jury metrics refreshed.</div>`;
+            currentEvidenceStep++;
+        } else {
+            stats.combo = Math.max(1.0, stats.combo - 0.1);
+            stats.jury = Math.max(0, stats.jury - 15);
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color: #ff4c4c; font-weight: bold;">🔊 [BENCH] "Overruled!" Clout tracking shifted down.</div>`;
+            let line = activeCaseData.steps[currentEvidenceStep];
+            caseTextEl.innerHTML += `<div class="evidence-line"><strong>${line.speaker}:</strong> ${line.text}</div>`;
+            currentEvidenceStep++;
+        }
+        updateStatsDisplay();
+        caseTextEl.scrollTop = caseTextEl.scrollHeight;
+    }
+
+    function triggerHungJuryCrisis() {
+        stopTimer();
+        document.getElementById('crisis-alert').style.display = "block";
+        btnProceed.disabled = true; btnOrder.disabled = true;
+    }
+
+    function resolveHungJury(method) {
+        document.getElementById('crisis-alert').style.display = "none";
+        btnProceed.disabled = false; btnOrder.disabled = false;
+        
+        if (method === 'bribe') {
+            stats.cash = Math.max(0, stats.cash - 800);
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color:#a855f7;">[CRISIS FIXED] Disbursed $800 to buy off investigative reports.</div>`;
+        } else {
+            stats.integrity = Math.max(0, stats.integrity - 20);
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color:#ef4444;">[CRISIS FIXED] Threatened members of the panel. Alignment hit!</div>`;
+        }
+        stats.jury = 50;
+        startTimer();
+        updateStatsDisplay();
+        caseTextEl.scrollTop = caseTextEl.scrollHeight;
+    }
+
+    function decideGuilt(guilty) {
+        stopTimer();
+        document.getElementById('verdict-buttons').style.display = 'none';
+        btnOrder.disabled = true; btnProceed.disabled = true;
+
+        if(guilty) {
+            if(activeCaseData.innocent) {
+                stats.integrity = Math.max(0, stats.integrity - 30);
+                stats.fame = Math.max(10, stats.fame - 10);
+                caseTextEl.innerHTML += `<div class="evidence-line" style="color:#ff4c4c; font-weight:bold;">⚠️ WRONGFUL CONVICTION NOTICE: You convicted an innocent, framed person! Police Integrity destroyed (-30%).</div>`;
+            }
+            populateUniquePunishmentGrid();
+            document.getElementById('sentencing-panel').style.display = 'block';
+        } else {
+            if(activeCaseData.innocent) {
+                stats.integrity = Math.min(100, stats.integrity + 20);
+                stats.combo += 0.5;
+                caseTextEl.innerHTML += `
+                    <div class="verdict-announcement-block" style="border-color: #10b981; background-color: #f0fdf4;">
+                        <strong style="color: #16a34a; font-size: 18px; text-transform: uppercase;">✨ CORRECT ACQUITTAL ACCORD</strong><br>
+                        <span style="font-size: 15px; color: #14532d;">You successfully protected a framed individual! <strong>Integrity up (+20%) & Combo multiplied.</strong></span>
+                    </div>`;
+            } else {
+                caseTextEl.innerHTML += `
+                    <div class="verdict-announcement-block" style="border-color: #1e5a22;">
+                        <strong style="color: #1e5a22; font-size: 18px; text-transform: uppercase;">⚖️ OFFICIAL ACQUITTAL ORDER FILED</strong><br>
+                        <span style="font-size: 15px;">The Defendant is declared <strong>NOT GUILTY</strong> and discharged immediately.</span>
+                    </div>`;
+            }
+            advanceDocketTrack();
+        }
+    }
+
+    function filterSentenceThroughAppealSystem(punishmentObj) {
+        document.getElementById('sentencing-panel').style.display = 'none';
+        
+        if (Math.random() < 0.40) {
+            activeAppealStatute = punishmentObj.statute;
+            triggerAppellateChallengeEvent(punishmentObj.desc);
+        } else {
+            applyFinalSentenceOutcome(punishmentObj.desc);
+        }
+    }
+
+    function triggerAppellateChallengeEvent(pendingSentenceText) {
+        const block = document.getElementById('appeal-alert');
+        const choicesBox = document.getElementById('appeal-choices-box');
+        block.style.display = "block";
+        choicesBox.innerHTML = "";
+
+        ["101", "204", "309", "415"].forEach(st => {
+            let b = document.createElement('button');
+            b.className = "btn-utility";
+            b.innerText = `Statute ${st}`;
+            b.style.padding = "5px 12px";
+            b.onclick = () => verifyAppellateDefense(st, pendingSentenceText);
+            choicesBox.appendChild(b);
+        });
+
+        appealTimer = setTimeout(() => {
+            block.style.display = "none";
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color:#ef4444; font-weight:bold;">🚨 [APPEAL EXPIRED] Timeline failure. Rulings thrown out by high panel.</div>`;
+            stats.fame = Math.max(10, stats.fame - 15);
+            advanceDocketTrack();
+        }, 10000);
+    }
+
+    function verifyAppellateDefense(selectedStatute, originalSentenceText) {
+        clearTimeout(appealTimer);
+        document.getElementById('appeal-alert').style.display = "none";
+
+        if(selectedStatute === activeAppealStatute) {
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color:#10b981; font-weight:bold;">✨ [APPEAL SQUASHED] Legal defense confirmed. Rulings authorized!</div>`;
+            applyFinalSentenceOutcome(originalSentenceText);
+        } else {
+            caseTextEl.innerHTML += `<div class="evidence-line" style="color:#ef4444; font-weight:bold;">🚨 [APPEAL OVERRULED] Wrong statute chosen. Sentence canceled.</div>`;
+            stats.fame = Math.max(10, stats.fame - 15);
+            advanceDocketTrack();
+        }
+    }
+
+    function applyFinalSentenceOutcome(sentenceString) {
+        stats.fame = Math.min(100, stats.fame + 15);
+        caseTextEl.innerHTML += `
+            <div class="verdict-announcement-block">
+                <strong style="color: #8c1c1c; font-size: 18px; text-transform: uppercase;">⚖️ OFFICIAL CRIMINAL SENTENCE FILED</strong><br>
+                <p style="margin: 8px 0 0 0; font-size: 16px; font-weight: bold; font-style: italic; line-height: 1.4;">
+                    "${sentenceString}"
+                </p>
+            </div>`;
+        advanceDocketTrack();
+    }
+
+    function buyShopItem(type, cost) {
+        if (stats.cash < cost) { alert("Insufficient assets!"); return; }
+        stats.cash -= cost;
+        
+        if(type === 'sound') { 
+            upgrades.sound = true; 
+            document.getElementById('owned-sound').innerText = "Gold Sound System Equipped";
+            document.getElementById('owned-sound').style.color = "#22c55e";
+            document.getElementById('shop-sound').disabled = true;
+        } 
+        else if(type === 'robe') { 
+            upgrades.robe = true; 
+            document.getElementById('owned-robe').innerText = "Velvet Robes Equipped";
+            document.getElementById('owned-robe').style.color = "#22c55e";
+            document.getElementById('shop-robe').disabled = true;
+        }
+        else if(type === 'desk') { 
+            upgrades.desk = true; 
+            document.getElementById('owned-desk').innerText = "Secret Safe Desk Owned";
+            document.getElementById('owned-desk').style.color = "#22c55e";
+            document.getElementById('shop-desk').disabled = true;
+        }
+        else if(type === 'cleanse') { 
+            stats.integrity = Math.min(100, stats.integrity + 30); 
+        }
+
+        updateStatsDisplay(); 
+        switchModal('shop-modal', 'main-menu-modal');
+    }
+
+    function injectBribeMail(bribeObj) {
+        let multiplier = 1 + (stats.fame / 100);
+        let dynamicCash = Math.round(bribeObj.cash * multiplier);
+
+        emails.unshift({ id: Date.now(), from: bribeObj.from, body: bribeObj.text, cash: dynamicCash, isBribe: true, handled: false });
+        unreadCount++; updateBadge(); renderEmails();
+    }
+
+    function startEmailGeneratorBackgroundLoop() {
+        setInterval(() => {
+            let item = informationalEmailPool[Math.floor(Math.random() * informationalEmailPool.length)];
+            if(emails.length === 0 || emails[0].body !== item.body) {
+                emails.unshift({ id: Date.now(), from: item.from, body: item.body, isBribe: false, handled: true });
+                unreadCount++; updateBadge(); renderEmails();
+            }
+        }, 20000);
+    }
+
+    function updateBadge() {
+        const b = document.getElementById('menu-badge');
+        if(unreadCount > 0) { b.innerText = unreadCount; b.style.display = "inline-block"; }
+        else { b.style.display = "none"; }
+    }
+
+    function renderEmails() {
+        const container = document.getElementById('email-list-container');
+        container.innerHTML = "";
+        emails.forEach(m => {
+            let act = m.isBribe && !m.handled ? `
+                <div class="email-actions">
+                    <button class="btn-action-small" style="background:#1e5a22;" onclick="actEmail(${m.id}, 'take')">💰 Take Bribe ($${m.cash})</button>
+                    <button class="btn-action-small" style="background:#8c1c1c;" onclick="actEmail(${m.id}, 'report')">🚨 Report to Agency</button>
+                </div>` : `<div style="color:#a68050; font-size:11px; margin-top:5px; font-family:monospace;">✓ Secure Terminal Data Verified</div>`;
+            
+            let boundaryStyle = m.isBribe ? "border-left: 4px solid #d4af37;" : "border-left: 4px solid #38bdf8; background-color: #0b131f;";
+            container.innerHTML += `<div class="email-item" style="${boundaryStyle}"><strong>From: ${m.from}</strong><p style="margin:5px 0; font-size:13px; line-height:1.4;">"${m.body}"</p>${act}</div>`;
+        });
+    }
+
+    function actEmail(id, choice) {
+        let m = emails.find(x => x.id === id); if(!m) return; m.handled = true;
+        if(choice === 'take') { 
+            stats.cash += m.cash; 
+            let structuralLoss = upgrades.desk ? 15 : 30;
+            stats.integrity = Math.max(0, stats.integrity - structuralLoss); 
+        } 
+        else { 
+            stats.integrity = Math.min(100, stats.integrity + 10); 
+        }
+        renderEmails(); updateStatsDisplay(); switchModal('emails-modal', 'main-menu-modal');
+    }
+
+    function handleMistrialTimeout() {
+        stopTimer(); document.getElementById('verdict-buttons').style.display = 'none';
+        btnOrder.disabled = true; btnProceed.disabled = true;
+        caseTextEl.innerHTML += `<div class="evidence-line" style="color:#ff4c4c; font-weight:bold;">[MISTRIAL] Baseline timer reached zero. Case files discarded.</div>`;
+        advanceDocketTrack();
+    }
+
+    function advanceDocketTrack() {
+        stats.cases++; 
+        let btn = document.createElement('button'); btn.className = "btn-utility"; btn.style.width = "100%"; btn.style.marginTop = "15px";
+        if(stats.cases % 3 === 0) {
+            btn.innerText = "Adjourn Daily Sessions →";
+            btn.onclick = () => { liveCourtUI.style.display = 'none'; document.getElementById('cycle-zone').style.display = 'block'; };
+        } else {
+            btn.innerText = "Call Next Docket Case File →";
+            btn.onclick = () => generateNewRandomCase();
+        }
+        caseTextEl.appendChild(btn); caseTextEl.scrollTop = caseTextEl.scrollHeight;
+        updateStatsDisplay();
+    }
+
+    function goToHouse() { document.getElementById('cycle-zone').style.display = 'none'; document.getElementById('home-screen').style.display = 'block'; }
+    function startNextDay() { stats.day++; stats.combo = 1.0; stats.jury = 100; document.getElementById('home-screen').style.display = 'none'; generateNewRandomCase(); }
+</script>
+
+</body>
+</html>
+
+
